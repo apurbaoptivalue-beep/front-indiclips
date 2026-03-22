@@ -1,3 +1,4 @@
+'use client';
 import { Settings, Link as LinkIcon, MapPin, Grid, Heart, LayoutList, Share2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
