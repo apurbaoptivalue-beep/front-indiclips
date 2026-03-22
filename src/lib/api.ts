@@ -1,4 +1,4 @@
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://13.51.175.46:8000/api/v1";
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "YOUR_NEW_AWS_API_URL";
 
 export async function fetchAPI(endpoint: string, options: RequestInit = {}) {
   const url = `${API_BASE_URL}${endpoint}`;
