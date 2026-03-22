@@ -39,6 +39,50 @@ export default function DashboardPage() {
         ))}
       </div>
 
+      {/* Monetization Tracker */}
+      <div className="mb-8 bg-glass border border-glass-border rounded-3xl p-6 md:p-8 backdrop-blur-md shadow-2xl relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-64 h-64 bg-secondary/10 rounded-full blur-[80px] pointer-events-none" />
+        <div className="flex items-center gap-3 mb-6 relative z-10">
+          <div className="w-12 h-12 bg-gradient-to-tr from-primary to-secondary rounded-xl flex items-center justify-center shadow-lg shadow-primary/20">
+            <DollarSign className="w-6 h-6 text-white" />
+          </div>
+          <div>
+            <h2 className="text-xl font-black text-white">Monetization Eligibility</h2>
+            <p className="text-sm text-gray-400 font-medium">Track your progress toward joining the Creator Fund.</p>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 relative z-10">
+          {/* Follower Target */}
+          <div className="space-y-3">
+            <div className="flex justify-between items-end">
+              <div>
+                <p className="text-white font-bold text-sm">Followers</p>
+                <p className="text-xs text-gray-500 font-medium mt-1">Goal: 1,000</p>
+              </div>
+              <span className="text-sm font-black text-primary">850 / 1000</span>
+            </div>
+            <div className="w-full h-3 bg-black/50 rounded-full overflow-hidden border border-gray-800 relative">
+              <div className="absolute top-0 left-0 h-full bg-gradient-to-r from-primary to-secondary w-[85%] rounded-full shadow-[0_0_10px_rgba(236,72,153,0.5)] z-10" />
+            </div>
+          </div>
+
+          {/* Watch Time Target */}
+          <div className="space-y-3">
+            <div className="flex justify-between items-end">
+              <div>
+                <p className="text-white font-bold text-sm">Watch Time (Hours)</p>
+                <p className="text-xs text-gray-500 font-medium mt-1">Goal: 4,000</p>
+              </div>
+              <span className="text-sm font-black text-secondary">3,200 / 4000</span>
+            </div>
+            <div className="w-full h-3 bg-black/50 rounded-full overflow-hidden border border-gray-800 relative">
+              <div className="absolute top-0 left-0 h-full bg-gradient-to-r from-secondary to-blue-500 w-[80%] rounded-full shadow-[0_0_10px_rgba(59,130,246,0.5)] z-10" />
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* Main Content Area */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Chart Area */}

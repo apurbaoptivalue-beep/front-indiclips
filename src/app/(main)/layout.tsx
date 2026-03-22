@@ -2,6 +2,7 @@ import Header from "@/components/Layout/Header";
 import Sidebar from "@/components/Layout/Sidebar";
 import Chatbot from "@/components/Chatbot/Chatbot";
 import BottomNav from "@/components/Layout/BottomNav";
+import SplashScreen from "@/components/Layout/SplashScreen";
 
 export default function MainLayout({
   children,
@@ -10,6 +11,7 @@ export default function MainLayout({
 }) {
   return (
     <div className="min-h-screen bg-background text-foreground">
+      <SplashScreen />
       <Header />
       <div className="flex relative">
         <Sidebar />

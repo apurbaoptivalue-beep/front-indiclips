@@ -16,6 +16,12 @@ export const metadata: Metadata = {
   title: "IndiClips | Premium Indian Video Platform",
   description: "Next-generation Indian video sharing and monetization platform",
   themeColor: "#09090b",
+  manifest: "/manifest.json",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "black-translucent",
+    title: "IndiClips"
+  }
 };
 
 export default function RootLayout({

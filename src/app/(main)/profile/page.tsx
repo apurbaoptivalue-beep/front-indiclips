@@ -32,7 +32,7 @@ export default function ProfilePage() {
             <Button variant="outline" size="icon" className="border-gray-700 hover:bg-gray-800 rounded-full h-10 w-10" onClick={() => alert('Share link copied!')}>
               <Share2 className="w-4 h-4" />
             </Button>
-            <Link href="/admin">
+            <Link href="/settings">
               <Button variant="outline" size="icon" className="border-gray-700 hover:bg-gray-800 rounded-full h-10 w-10">
                 <Settings className="w-4 h-4" />
               </Button>

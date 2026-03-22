@@ -18,10 +18,13 @@ export default function Header() {
       <div className="flex h-16 items-center px-4 md:px-6 justify-between">
         <div className="flex items-center gap-2">
           <Link href="/" className="flex items-center gap-2 group">
-            <div className="w-8 h-8 bg-gradient-to-br from-primary to-secondary rounded-lg flex items-center justify-center transition-transform group-hover:scale-110">
-              <span className="text-white font-bold text-lg leading-none">i</span>
+            <div className="w-8 h-8 flex items-center justify-center transition-transform group-hover:scale-110">
+              <img src="/logo.png" alt="IndiClips" className="w-8 h-8 object-contain" onError={(e) => { e.currentTarget.style.display = 'none'; e.currentTarget.nextElementSibling!.classList.remove('hidden'); }} />
+              <div className="hidden w-8 h-8 bg-gradient-to-br from-primary to-secondary rounded-lg flex items-center justify-center">
+                <span className="text-white font-bold text-lg leading-none">i</span>
+              </div>
             </div>
-            <span className="hidden md:inline-block font-bold text-xl tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary">
+            <span className="hidden sm:block font-black text-xl tracking-tight text-white group-hover:text-primary transition-colors">
               IndiClips
             </span>
           </Link>
