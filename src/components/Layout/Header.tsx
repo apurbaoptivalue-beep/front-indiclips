@@ -1,15 +1,22 @@
+"use client";
 import Link from "next/link";
-import { Search, Bell, Wallet, User, Menu } from "lucide-react";
+import { Search, Bell, Wallet, User, LogIn } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useState, useEffect } from "react";
 
 export default function Header() {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+    setIsAuthenticated(!!localStorage.getItem("token"));
+  }, []);
+
   return (
     <header className="sticky top-0 z-50 w-full border-b border-glass-border bg-background/80 backdrop-blur-xl">
       <div className="flex h-16 items-center px-4 md:px-6 justify-between">
-        <div className="flex items-center gap-4">
-          <Button variant="ghost" size="icon" className="md:hidden">
-            <Menu className="h-6 w-6" />
-          </Button>
+        <div className="flex items-center gap-2">
           <Link href="/" className="flex items-center gap-2 group">
             <div className="w-8 h-8 bg-gradient-to-br from-primary to-secondary rounded-lg flex items-center justify-center transition-transform group-hover:scale-110">
               <span className="text-white font-bold text-lg leading-none">i</span>
@@ -37,19 +44,28 @@ export default function Header() {
               <Wallet className="h-5 w-5" />
             </Button>
           </Link>
-          <Link href="/notifications">
+          <Link href="/notifications" className="hidden sm:block">
             <Button variant="ghost" size="icon" className="relative text-gray-300 hover:text-white hover:bg-glass">
               <Bell className="h-5 w-5" />
               <span className="absolute top-2 right-2.5 w-2 h-2 bg-secondary rounded-full animate-pulse shadow-[0_0_8px_rgba(236,72,153,0.8)]" />
             </Button>
           </Link>
-          <Link href="/profile">
-            <div className="h-8 w-8 ml-2 rounded-full bg-gradient-to-tr from-primary to-secondary p-[2px] cursor-pointer hover:scale-105 transition-transform">
-              <div className="w-full h-full bg-background rounded-full flex items-center justify-center">
-                <User className="h-4 w-4 text-gray-300" />
+
+          {mounted && !isAuthenticated ? (
+            <Link href="/login">
+              <Button className="bg-gradient-to-r from-primary to-secondary text-white font-bold h-9">
+                <LogIn className="w-4 h-4 mr-2" /> Log In
+              </Button>
+            </Link>
+          ) : (
+            <Link href="/profile" className="hidden md:block">
+              <div className="h-8 w-8 ml-2 rounded-full bg-gradient-to-tr from-primary to-secondary p-[2px] cursor-pointer hover:scale-105 transition-transform">
+                <div className="w-full h-full bg-background rounded-full flex items-center justify-center">
+                  <User className="h-4 w-4 text-gray-300" />
+                </div>
               </div>
-            </div>
-          </Link>
+            </Link>
+          )}
         </div>
       </div>
     </header>

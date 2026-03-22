@@ -1,6 +1,7 @@
 import Header from "@/components/Layout/Header";
 import Sidebar from "@/components/Layout/Sidebar";
 import Chatbot from "@/components/Chatbot/Chatbot";
+import BottomNav from "@/components/Layout/BottomNav";
 
 export default function MainLayout({
   children,
@@ -17,12 +18,13 @@ export default function MainLayout({
           <div className="fixed top-[20%] right-[-5%] w-[30%] h-[40%] bg-primary/10 rounded-full blur-[100px] pointer-events-none z-0" />
           <div className="fixed bottom-[-10%] left-[20%] w-[30%] h-[30%] bg-secondary/10 rounded-full blur-[120px] pointer-events-none z-0" />
           
-          <div className="relative z-10 w-full h-full">
-            {children}
-          </div>
-        </main>
+            <div className="relative z-10 w-full h-full">
+              {children}
+            </div>
+          </main>
+        </div>
+        <Chatbot />
+        <BottomNav />
       </div>
-      <Chatbot />
-    </div>
-  );
-}
+    );
+  }
