@@ -1,261 +1,109 @@
 "use client";
 import React, { useState } from "react";
-import { User, Shield, Bell, Lock, Key, LogOut, CheckCircle2, ChevronRight, AlertCircle } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { fetchAPI } from "@/lib/api";
-import { cn } from "@/lib/utils";
-
-type TabType = "profile" | "account" | "privacy" | "notifications";
+import { User, Shield, Bell, Lock, Key, LogOut, CheckCircle2, ChevronRight, AlertCircle, Bookmark, Clock, BarChart2, Timer, Star, LayoutGrid, Ban, EyeOff, Users, Sparkles, Scissors, Video, Search } from "lucide-react";
 
 export default function SettingsPage() {
-  const [activeTab, setActiveTab] = useState<TabType>("profile");
-  const [isSaving, setIsSaving] = useState(false);
-  const [saved, setSaved] = useState(false);
-  const [error, setError] = useState("");
-  const [currentPassword, setCurrentPassword] = useState("");
-  const [newPassword, setNewPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
 
-  const handleSave = async () => {
-    setIsSaving(true);
-    setError("");
-    
-    try {
-      if (activeTab === "account") {
-        if (!currentPassword || !newPassword) {
-          throw new Error("Please fill in both password fields");
-        }
-        if (newPassword !== confirmPassword) {
-          throw new Error("New passwords do not match");
-        }
-        
-        await fetchAPI("/users/security", {
-          method: "PUT",
-          body: JSON.stringify({ currentPassword, newPassword }),
-        });
-      } else {
-        // Mock delay for other tabs
-        await new Promise(r => setTimeout(r, 800));
-      }
-      
-      setSaved(true);
-      setCurrentPassword("");
-      setNewPassword("");
-      setConfirmPassword("");
-      setTimeout(() => setSaved(false), 3000);
-    } catch (err: any) {
-      setError(err.message || "Failed to save settings");
-      setTimeout(() => setError(""), 5000);
-    } finally {
-      setIsSaving(false);
+  const triggerVibrate = () => {
+    if (typeof window !== "undefined" && navigator.vibrate) {
+      navigator.vibrate(30);
     }
   };
 
-  const tabs = [
-    { id: "profile", label: "Edit Profile", icon: User, color: "text-blue-400", bg: "bg-blue-400/20" },
-    { id: "account", label: "Account & Security", icon: Shield, color: "text-purple-400", bg: "bg-purple-400/20" },
-    { id: "privacy", label: "Privacy", icon: Lock, color: "text-pink-400", bg: "bg-pink-400/20" },
-    { id: "notifications", label: "Notifications", icon: Bell, color: "text-orange-400", bg: "bg-orange-400/20" },
-  ];
+  const SectionTitle = ({ children }: { children: React.ReactNode }) => (
+    <h3 className="text-gray-400 font-bold text-[13px] uppercase tracking-widest mt-8 mb-3 px-2 flex items-center">{children}</h3>
+  );
+
+  const SettingRow = ({ icon: Icon, label, value, subtext }: any) => (
+    <div 
+      onClick={triggerVibrate}
+      className="flex items-center justify-between p-4 bg-glass border border-glass-border hover:bg-white/5 transition-colors cursor-pointer group first:rounded-t-2xl last:rounded-b-2xl border-b-0 last:border-b relative overflow-hidden"
+    >
+      <div className="absolute inset-0 bg-gradient-to-r from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+      <div className="flex items-center gap-4 relative z-10 w-full">
+        <Icon className="w-6 h-6 text-white group-hover:text-primary transition-colors" strokeWidth={1.5} />
+        <div className="flex flex-col flex-1 min-w-0">
+           <span className="text-white font-medium text-[15px]">{label}</span>
+           {subtext && <span className="text-gray-500 text-sm mt-0.5 pr-4 truncate block">{subtext}</span>}
+        </div>
+      </div>
+      <div className="flex items-center gap-2 relative z-10 flex-shrink-0">
+        {value && <span className="text-gray-400 font-medium text-sm whitespace-nowrap">{value}</span>}
+        <ChevronRight className="w-5 h-5 text-gray-500 group-hover:text-primary transition-colors" strokeWidth={1.5} />
+      </div>
+    </div>
+  );
 
   return (
-    <div className="w-full max-w-5xl mx-auto py-6 md:py-10 px-4 animate-in fade-in duration-500">
-      <div className="mb-8">
-        <h1 className="text-3xl font-black text-white tracking-tight mb-2">Settings</h1>
-        <p className="text-gray-400 font-medium">Manage your account preferences and privacy.</p>
+    <div className="w-full max-w-2xl mx-auto py-6 md:py-10 px-4 animate-in fade-in duration-500 pb-24">
+      <div className="mb-6 flex items-center justify-between">
+        <h1 className="text-2xl font-bold text-white tracking-tight">Settings and activity</h1>
       </div>
 
-      <div className="flex flex-col md:flex-row gap-8">
-        {/* Navigation Sidebar */}
-        <div className="w-full md:w-72 flex-shrink-0 space-y-3">
-          {tabs.map((tab) => (
-            <button
-              key={tab.id}
-              onClick={() => {
-                if (typeof window !== "undefined" && navigator.vibrate) navigator.vibrate(30);
-                setActiveTab(tab.id as TabType);
-              }}
-              className={`w-full flex items-center justify-between p-4 rounded-2xl transition-all duration-300 font-bold tracking-wide relative overflow-hidden group border ${
-                activeTab === tab.id
-                  ? "bg-gradient-to-r from-primary to-secondary text-white border-transparent shadow-[0_10px_30px_-5px_rgba(236,72,153,0.5)] scale-105 z-10"
-                  : "bg-glass/80 border-glass-border/50 text-gray-400 hover:text-white hover:border-primary/50 hover:bg-glass hover:shadow-[0_5px_15px_rgba(236,72,153,0.15)] hover:scale-[1.02]"
-              }`}
-            >
-              <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/10 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]" />
-              <div className="flex items-center gap-4 relative z-10">
-                <div className={cn("p-2.5 rounded-xl transition-colors shadow-inner", activeTab === tab.id ? "bg-white/20" : tab.bg)}>
-                  <tab.icon className={cn("w-5 h-5", activeTab === tab.id ? "text-white" : tab.color)} />
-                </div>
-                {tab.label}
-              </div>
-              <ChevronRight className={`w-4 h-4 transition-transform relative z-10 ${activeTab === tab.id ? "translate-x-1" : "opacity-50"}`} />
-            </button>
-          ))}
-        </div>
+      <div className="relative mb-8">
+        <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+        <input 
+          type="text" 
+          placeholder="Search settings" 
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="w-full h-12 bg-black/40 border border-gray-800 rounded-xl pl-12 pr-4 text-white placeholder-gray-500 font-medium outline-none focus:border-primary/50 transition-all hover:bg-black/60 focus:bg-black/60 shadow-inner"
+        />
+      </div>
 
-        {/* Content Area */}
-        <div className="flex-1 bg-glass border border-glass-border rounded-3xl p-6 md:p-10 shadow-2xl relative overflow-hidden backdrop-blur-md">
-          {error && (
-            <div className="absolute top-4 right-4 bg-red-500/20 border border-red-500/50 text-red-400 px-4 py-3 rounded-xl flex items-center gap-2 font-bold text-sm animate-in fade-in slide-in-from-top-4 z-20 shadow-lg shadow-red-500/10">
-              <AlertCircle className="w-5 h-5 flex-shrink-0" /> {error}
-            </div>
-          )}
-          {saved && (
-            <div className="absolute top-4 right-4 bg-green-500/20 border border-green-500/50 text-green-400 px-4 py-2 rounded-xl flex items-center gap-2 font-bold text-sm animate-in fade-in slide-in-from-top-4 z-20 shadow-lg shadow-green-500/10">
-              <CheckCircle2 className="w-5 h-5" /> Settings Saved!
-            </div>
-          )}
+      <div className="space-y-0 relative z-10">
+        <SectionTitle>
+          Your account
+        </SectionTitle>
+        <SettingRow icon={User} label="Accounts Center" subtext="Password, security, personal details, ad preferences" />
+        
+        <SectionTitle>How you use IndiClips</SectionTitle>
+        <SettingRow icon={Bookmark} label="Saved" />
+        <SettingRow icon={Clock} label="Archive" />
+        <SettingRow icon={BarChart2} label="Video Analytics" subtext="View performance for your recent uploads" />
+        <SettingRow icon={Bell} label="Notifications" />
+        <SettingRow icon={Timer} label="Time management" />
 
-          {activeTab === "profile" && (
-            <div className="space-y-8 animate-in fade-in slide-in-from-right-4 duration-300">
-              <div className="flex items-center justify-between border-b border-glass-border pb-6">
-                <div>
-                  <h2 className="text-xl font-black text-white">Public Profile</h2>
-                  <p className="text-sm text-gray-400 mt-1">This information will be displayed on your channel.</p>
-                </div>
-              </div>
+        <SectionTitle>Who can see your content</SectionTitle>
+        <SettingRow icon={Lock} label="Account privacy" value="Public" />
+        <SettingRow icon={Star} label="Close Friends" value="0" />
+        <SettingRow icon={LayoutGrid} label="Crossposting" />
+        <SettingRow icon={Ban} label="Blocked" value="0" />
+        <SettingRow icon={EyeOff} label="Story, live and location" />
+        <SettingRow icon={Users} label="Activity in Friends tab" />
 
-              <div className="flex items-center gap-6">
-                <div className="w-24 h-24 rounded-full bg-gradient-to-tr from-primary to-secondary p-1">
-                  <div className="w-full h-full bg-background rounded-full border-4 border-background flex items-center justify-center overflow-hidden relative group cursor-pointer">
-                    <User className="w-10 h-10 text-gray-400" />
-                    <div className="absolute inset-0 bg-black/60 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                      <span className="text-white text-xs font-bold">CHANGE</span>
-                    </div>
-                  </div>
-                </div>
-                <Button className="bg-glass border border-gray-700 hover:bg-gray-800 text-white font-bold h-10">Upload Picture</Button>
-              </div>
-
-              <div className="space-y-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <label className="text-xs font-black tracking-widest text-gray-500 uppercase">Display Name</label>
-                    <input type="text" defaultValue="Neon Killa" className="w-full h-12 bg-black/60 border border-gray-800 rounded-xl px-4 text-white focus:border-primary outline-none font-bold" />
-                  </div>
-                  <div className="space-y-2">
-                    <label className="text-xs font-black tracking-widest text-gray-500 uppercase">Username</label>
-                    <div className="flex items-center">
-                      <span className="bg-gray-900 border border-gray-800 border-r-0 h-12 px-4 rounded-l-xl text-gray-500 flex items-center font-bold">@</span>
-                      <input type="text" defaultValue="neonkilla" className="w-full h-12 bg-black/60 border border-gray-800 rounded-r-xl px-4 text-white focus:border-primary outline-none font-bold" />
-                    </div>
-                  </div>
-                </div>
-                <div className="space-y-2">
-                  <label className="text-xs font-black tracking-widest text-gray-500 uppercase">Bio</label>
-                  <textarea defaultValue="Digital artist & video creator based in Mumbai." className="w-full h-24 bg-black/60 border border-gray-800 rounded-xl p-4 text-white focus:border-primary outline-none font-medium custom-scrollbar resize-none" />
-                </div>
-                <div className="space-y-2">
-                  <label className="text-xs font-black tracking-widest text-gray-500 uppercase">Website URL</label>
-                  <input type="url" defaultValue="https://neonkilla.com" className="w-full h-12 bg-black/60 border border-gray-800 rounded-xl px-4 text-white focus:border-primary outline-none font-medium" />
-                </div>
+        <SectionTitle>Also from IndiClips</SectionTitle>
+        <div 
+          onClick={triggerVibrate}
+          className="flex items-center justify-between p-4 bg-glass border border-glass-border hover:bg-white/5 transition-colors cursor-pointer group first:rounded-t-2xl last:rounded-b-2xl border-b-0 relative overflow-hidden"
+        >
+          <div className="absolute inset-0 bg-gradient-to-r from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+          <div className="flex items-center gap-4 relative z-10 w-full">
+            <div className="relative w-6 h-6 rounded-full bg-gradient-to-tr from-primary to-secondary p-0.5">
+              <div className="w-full h-full bg-black rounded-full flex items-center justify-center">
+                 <Sparkles className="w-3.5 h-3.5 text-white" />
               </div>
             </div>
-          )}
-
-          {activeTab === "account" && (
-            <div className="space-y-8 animate-in fade-in slide-in-from-right-4 duration-300">
-              <div className="border-b border-glass-border pb-6">
-                <h2 className="text-xl font-black text-white">Account Details</h2>
-                <p className="text-sm text-gray-400 mt-1">Manage your login and security settings.</p>
-              </div>
-
-              <div className="space-y-4">
-                <div className="space-y-2">
-                  <label className="text-xs font-black tracking-widest text-gray-500 uppercase">Email Address</label>
-                  <input type="email" defaultValue="creator@indiclips.com" readOnly className="w-full h-12 bg-black/40 border border-gray-800 rounded-xl px-4 text-gray-400 outline-none font-medium opacity-70" />
-                </div>
-                
-                <h3 className="text-sm font-bold text-white mt-8 mb-4 border-t border-glass-border pt-6">Change Password</h3>
-                <div className="space-y-4">
-                  <div className="space-y-2">
-                    <label className="text-xs font-black tracking-widest text-gray-500 uppercase">Current Password</label>
-                    <input type="password" value={currentPassword} onChange={e => setCurrentPassword(e.target.value)} placeholder="••••••••" className="w-full h-12 bg-black/60 border border-gray-800 rounded-xl px-4 text-white focus:border-primary outline-none font-medium" />
-                  </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <label className="text-xs font-black tracking-widest text-gray-500 uppercase">New Password</label>
-                      <input type="password" value={newPassword} onChange={e => setNewPassword(e.target.value)} placeholder="••••••••" className="w-full h-12 bg-black/60 border border-gray-800 rounded-xl px-4 text-white focus:border-primary outline-none font-medium" />
-                    </div>
-                    <div className="space-y-2">
-                      <label className="text-xs font-black tracking-widest text-gray-500 uppercase">Confirm New Password</label>
-                      <input type="password" value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} placeholder="••••••••" className="w-full h-12 bg-black/60 border border-gray-800 rounded-xl px-4 text-white focus:border-primary outline-none font-medium" />
-                    </div>
-                  </div>
-                </div>
-              </div>
+            <div className="flex flex-col flex-1 min-w-0">
+               <span className="text-white font-medium text-[15px]">IndiClips AI</span>
+               <span className="text-gray-500 text-sm mt-0.5 truncate block">Get answers, advice and generate images</span>
             </div>
-          )}
-
-          {activeTab === "privacy" && (
-            <div className="space-y-8 animate-in fade-in slide-in-from-right-4 duration-300">
-              <div className="border-b border-glass-border pb-6">
-                <h2 className="text-xl font-black text-white">Privacy Controls</h2>
-                <p className="text-sm text-gray-400 mt-1">Control who can see and interact with your content.</p>
-              </div>
-
-              <div className="space-y-6">
-                <div className="flex items-center justify-between p-4 bg-black/40 rounded-xl border border-gray-800 hover:border-gray-700 transition-colors">
-                  <div>
-                    <p className="text-white font-bold">Private Account</p>
-                    <p className="text-xs text-gray-500 mt-1">Only approved followers can see your posts.</p>
-                  </div>
-                  <div className="w-12 h-6 bg-gray-800 rounded-full relative cursor-pointer group">
-                    <div className="w-5 h-5 bg-gray-500 rounded-full absolute top-0.5 left-0.5 group-hover:bg-gray-400 transition-colors" />
-                  </div>
-                </div>
-                
-                <div className="flex items-center justify-between p-4 bg-black/40 rounded-xl border border-gray-800 hover:border-gray-700 transition-colors">
-                  <div>
-                    <p className="text-white font-bold">Allow Comments</p>
-                    <p className="text-xs text-gray-500 mt-1">Let everyone comment on your public videos.</p>
-                  </div>
-                  <div className="w-12 h-6 bg-primary rounded-full relative cursor-pointer group shadow-[0_0_10px_rgba(139,92,246,0.3)]">
-                    <div className="w-5 h-5 bg-white rounded-full absolute top-0.5 right-0.5 shadow-sm" />
-                  </div>
-                </div>
-
-                <div className="flex items-center justify-between p-4 bg-black/40 rounded-xl border border-gray-800 hover:border-gray-700 transition-colors">
-                  <div>
-                    <p className="text-white font-bold">Show Activity Status</p>
-                    <p className="text-xs text-gray-500 mt-1">Let others see when you are online in Chat.</p>
-                  </div>
-                  <div className="w-12 h-6 bg-primary rounded-full relative cursor-pointer group shadow-[0_0_10px_rgba(139,92,246,0.3)]">
-                    <div className="w-5 h-5 bg-white rounded-full absolute top-0.5 right-0.5 shadow-sm" />
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {activeTab === "notifications" && (
-            <div className="space-y-8 animate-in fade-in slide-in-from-right-4 duration-300">
-              <div className="border-b border-glass-border pb-6">
-                <h2 className="text-xl font-black text-white">Push Notifications</h2>
-                <p className="text-sm text-gray-400 mt-1">Choose what alerts you receive on your device.</p>
-              </div>
-
-              <div className="space-y-4">
-                {["New Follower", "Likes on your videos", "Comments on your posts", "Direct Messages", "Live Stream Alerts", "Tips and Earnings"].map((label, i) => (
-                  <div key={i} className="flex items-center justify-between">
-                    <span className="text-sm font-bold text-gray-300">{label}</span>
-                    <input type="checkbox" defaultChecked className="w-5 h-5 accent-primary bg-black/60 border-gray-800 rounded outline-none" />
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* Save Button */}
-          <div className="mt-10 pt-6 border-t border-glass-border flex justify-end">
-             <Button 
-               onClick={handleSave}
-               disabled={isSaving}
-               className="bg-gradient-to-r from-primary to-secondary text-white font-black tracking-widest uppercase text-sm h-12 px-10 rounded-xl shadow-[0_0_20px_rgba(139,92,246,0.3)] hover:shadow-[0_0_30px_rgba(236,72,153,0.5)] hover:scale-[1.02] transition-all disabled:opacity-50"
-             >
-               {isSaving ? "Saving..." : "Save Changes"}
-             </Button>
           </div>
+          <div className="flex items-center gap-2">
+            <div className="w-2 h-2 rounded-full bg-primary shadow-[0_0_8px_rgba(236,72,153,0.8)]" />
+            <ChevronRight className="w-5 h-5 text-gray-500 group-hover:text-primary transition-colors relative z-10" />
+          </div>
+        </div>
+        <SettingRow icon={Scissors} label="Edits" subtext="Create videos with powerful editing tools" />
+        <SettingRow icon={Video} label="Creator Studio" subtext="Manage your videos and analytics" />
+
+        <SectionTitle>Login</SectionTitle>
+        <div onClick={triggerVibrate} className="p-4 bg-glass border border-glass-border border-b-0 rounded-t-2xl hover:bg-white/5 transition-colors cursor-pointer font-medium text-[15px] text-blue-500">
+          Add account
+        </div>
+        <div onClick={triggerVibrate} className="p-4 bg-glass border border-glass-border rounded-b-2xl hover:bg-white/5 transition-colors cursor-pointer font-medium text-[15px] text-red-500">
+          Log out
         </div>
       </div>
     </div>

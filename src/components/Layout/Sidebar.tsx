@@ -9,7 +9,7 @@ export default function Sidebar() {
     { icon: PlusSquare, label: "Upload", href: "/upload" },
     { icon: User, label: "Profile", href: "/profile" },
     { icon: LayoutDashboard, label: "Dashboard", href: "/dashboard" },
-    { icon: Settings, label: "Settings", href: "/admin" },
+    { icon: Settings, label: "Settings", href: "/settings" },
   ];
 
   return (
