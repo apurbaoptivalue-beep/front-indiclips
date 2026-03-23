@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useRef } from "react";
-import { UploadCloud, CheckCircle, Video, Image as ImageIcon, Type, AlertCircle, X } from "lucide-react";
+import { UploadCloud, CheckCircle, Video, Image as ImageIcon, Type, AlertCircle, X, Wand2, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { fetchAPI } from "@/lib/api";
 
@@ -16,8 +16,21 @@ export default function UploadPage() {
   const [uploading, setUploading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState("");
+  const [aiProcessing, setAiProcessing] = useState(false);
+  const [aiMood, setAiMood] = useState("cinematic");
+  const [directorCutApplied, setDirectorCutApplied] = useState(false);
 
   const inputRef = useRef<HTMLInputElement>(null);
+
+  const handleAIDirector = () => {
+    if (!file) return;
+    setAiProcessing(true);
+    // Simulate AI processing frames and audio syncing
+    setTimeout(() => {
+      setAiProcessing(false);
+      setDirectorCutApplied(true);
+    }, 4000);
+  };
 
   const handleDrag = (e: React.DragEvent) => {
     e.preventDefault();
@@ -138,7 +151,7 @@ export default function UploadPage() {
           <p className="text-gray-400 mb-8">Your post is now live and processing on our servers.</p>
           <Button 
             className="bg-primary text-white font-bold px-8 pb-1 pt-0.5 rounded-xl uppercase tracking-widest text-xs h-12"
-            onClick={() => { setSuccess(false); setFile(null); setCaption(""); setDescription(""); setTextContent(""); }}
+            onClick={() => { setSuccess(false); setFile(null); setCaption(""); setDescription(""); setTextContent(""); setDirectorCutApplied(false); }}
           >
             Create Another Post
           </Button>
@@ -191,6 +204,53 @@ export default function UploadPage() {
                     </div>
                     <p className="text-white font-bold mb-2 truncate max-w-[200px] mx-auto text-lg">{file.name}</p>
                     <p className="text-gray-400 font-bold tracking-widest uppercase text-xs">{(file.size / (1024 * 1024)).toFixed(2)} MB</p>
+
+                    {postType === "video" && !uploading && !success && (
+                      <div className="mt-6 w-full max-w-sm mx-auto animate-in fade-in slide-in-from-bottom-4 duration-500">
+                        {aiProcessing ? (
+                          <div className="relative overflow-hidden bg-primary/10 backdrop-blur-xl border border-primary/30 p-5 rounded-2xl flex flex-col items-center shadow-[0_0_30px_rgba(236,72,153,0.2)]">
+                            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full animate-[shimmer_1.5s_infinite]" />
+                            <Sparkles className="w-8 h-8 text-primary animate-spin mb-3 drop-shadow-[0_0_10px_rgba(236,72,153,0.8)]" />
+                            <p className="text-white font-black tracking-tight text-sm">AI Director analyzing beats...</p>
+                            <p className="text-gray-400 font-bold text-[10px] uppercase tracking-widest mt-1">Color Grading • Auto-Sync</p>
+                            <div className="w-full h-1.5 bg-black/60 mt-4 rounded-full overflow-hidden border border-gray-800">
+                              <div className="h-full bg-gradient-to-r from-primary to-secondary animate-pulse" style={{ width: "100%" }} />
+                            </div>
+                          </div>
+                        ) : directorCutApplied ? (
+                          <div className="bg-green-500/10 backdrop-blur-md border border-green-500/30 p-4 rounded-xl flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(34,197,94,0.15)]">
+                            <CheckCircle className="w-5 h-5 text-green-400 drop-shadow-[0_0_8px_rgba(34,197,94,0.8)]" />
+                            <p className="text-white font-bold text-sm">Director's Cut Applied <span className="text-green-400 uppercase tracking-widest text-[10px] ml-1 px-1.5 py-0.5 rounded bg-green-500/20">{aiMood}</span></p>
+                          </div>
+                        ) : (
+                          <div className="bg-glass/80 backdrop-blur-xl border border-glass-border hover:border-primary/50 p-5 rounded-2xl shadow-[0_0_20px_rgba(0,0,0,0.5)] transition-all group overflow-hidden relative">
+                            <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                            <div className="flex items-center justify-between mb-4 relative z-10">
+                              <span className="text-white font-black text-sm flex items-center gap-2 drop-shadow-md">
+                                <span className="p-1.5 rounded-lg bg-primary/20"><Wand2 className="w-4 h-4 text-primary" /></span> 
+                                AI Director's Cut
+                              </span>
+                              <select 
+                                value={aiMood}
+                                onChange={(e) => setAiMood(e.target.value)}
+                                onClick={(e) => e.stopPropagation()}
+                                className="bg-black border border-gray-700 text-xs font-bold text-gray-300 hover:text-white focus:border-primary rounded-lg px-2 py-1.5 outline-none cursor-pointer hover:bg-gray-900 transition-colors"
+                              >
+                                <option value="cinematic">Cinematic 🎬</option>
+                                <option value="retro">Retro Vibe 📼</option>
+                                <option value="cyberpunk">Cyberpunk 🌃</option>
+                              </select>
+                            </div>
+                            <Button 
+                              onClick={(e) => { e.stopPropagation(); handleAIDirector(); }}
+                              className="w-full bg-primary hover:bg-secondary text-white font-black tracking-widest uppercase text-[11px] shadow-lg shadow-primary/20 hover:shadow-secondary/40 h-10 transition-all rounded-xl relative z-10"
+                            >
+                              Auto-Sync to Beat & Grade
+                            </Button>
+                          </div>
+                        )}
+                      </div>
+                    )}
                   </div>
                 ) : (
                   <div className="text-center group cursor-pointer" onClick={() => inputRef.current?.click()}>

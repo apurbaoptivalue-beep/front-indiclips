@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { User, Shield, Bell, Lock, Key, LogOut, CheckCircle2, ChevronRight, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { fetchAPI } from "@/lib/api";
+import { cn } from "@/lib/utils";
 
 type TabType = "profile" | "account" | "privacy" | "notifications";
 
@@ -51,10 +52,10 @@ export default function SettingsPage() {
   };
 
   const tabs = [
-    { id: "profile", label: "Edit Profile", icon: User },
-    { id: "account", label: "Account & Security", icon: Shield },
-    { id: "privacy", label: "Privacy", icon: Lock },
-    { id: "notifications", label: "Notifications", icon: Bell },
+    { id: "profile", label: "Edit Profile", icon: User, color: "text-blue-400", bg: "bg-blue-400/20" },
+    { id: "account", label: "Account & Security", icon: Shield, color: "text-purple-400", bg: "bg-purple-400/20" },
+    { id: "privacy", label: "Privacy", icon: Lock, color: "text-pink-400", bg: "bg-pink-400/20" },
+    { id: "notifications", label: "Notifications", icon: Bell, color: "text-orange-400", bg: "bg-orange-400/20" },
   ];
 
   return (
@@ -66,22 +67,28 @@ export default function SettingsPage() {
 
       <div className="flex flex-col md:flex-row gap-8">
         {/* Navigation Sidebar */}
-        <div className="w-full md:w-64 flex-shrink-0 space-y-2">
+        <div className="w-full md:w-72 flex-shrink-0 space-y-3">
           {tabs.map((tab) => (
             <button
               key={tab.id}
-              onClick={() => setActiveTab(tab.id as TabType)}
-              className={`w-full flex items-center justify-between p-4 rounded-2xl transition-all font-bold tracking-wide ${
+              onClick={() => {
+                if (typeof window !== "undefined" && navigator.vibrate) navigator.vibrate(30);
+                setActiveTab(tab.id as TabType);
+              }}
+              className={`w-full flex items-center justify-between p-4 rounded-2xl transition-all duration-300 font-bold tracking-wide relative overflow-hidden group border ${
                 activeTab === tab.id
-                  ? "bg-primary text-white shadow-[0_0_20px_rgba(139,92,246,0.2)]"
-                  : "bg-glass border border-glass-border text-gray-400 hover:text-white hover:bg-glass/80"
+                  ? "bg-gradient-to-r from-primary to-secondary text-white border-transparent shadow-[0_10px_30px_-5px_rgba(236,72,153,0.5)] scale-105 z-10"
+                  : "bg-glass/80 border-glass-border/50 text-gray-400 hover:text-white hover:border-primary/50 hover:bg-glass hover:shadow-[0_5px_15px_rgba(236,72,153,0.15)] hover:scale-[1.02]"
               }`}
             >
-              <div className="flex items-center gap-3">
-                <tab.icon className="w-5 h-5" />
+              <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/10 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]" />
+              <div className="flex items-center gap-4 relative z-10">
+                <div className={cn("p-2.5 rounded-xl transition-colors shadow-inner", activeTab === tab.id ? "bg-white/20" : tab.bg)}>
+                  <tab.icon className={cn("w-5 h-5", activeTab === tab.id ? "text-white" : tab.color)} />
+                </div>
                 {tab.label}
               </div>
-              <ChevronRight className={`w-4 h-4 transition-transform ${activeTab === tab.id ? "translate-x-1" : ""}`} />
+              <ChevronRight className={`w-4 h-4 transition-transform relative z-10 ${activeTab === tab.id ? "translate-x-1" : "opacity-50"}`} />
             </button>
           ))}
         </div>

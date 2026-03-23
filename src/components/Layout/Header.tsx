@@ -14,8 +14,9 @@ export default function Header() {
   }, []);
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-glass-border bg-background/80 backdrop-blur-xl">
-      <div className="flex h-16 items-center px-4 md:px-6 justify-between">
+    <header className="sticky top-0 z-50 w-full bg-black/40 backdrop-saturate-[180%] backdrop-blur-[30px] border-b border-white/10 shadow-[0_10px_30px_rgba(236,72,153,0.1)]">
+      <div className="absolute inset-x-0 bottom-0 h-[1px] bg-gradient-to-r from-transparent via-primary/50 to-transparent opacity-50" />
+      <div className="flex h-16 items-center px-4 md:px-6 justify-between relative">
         <div className="flex items-center gap-2">
           <Link href="/" className="flex items-center gap-2 group">
             <div className="w-8 h-8 flex items-center justify-center transition-transform group-hover:scale-110">
